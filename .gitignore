@@ -1,4 +1,4 @@
 /.conda
 tiles.gpkg
 /results
-__pycache__/hse_general.cpython-311.pyc
+/__pycache__
