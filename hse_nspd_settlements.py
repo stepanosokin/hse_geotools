@@ -4,7 +4,7 @@ import os, json
 from hse_general import smart_http_request
 
 
-def download_nspd_settlements(s: requests.Session, tiles_gpkg='tiles.gpkg', tiles_layer='kaluga'):    
+def download_nspd_settlements(s: requests.Session, tiles_gpkg='tiles.gpkg', tiles_layer='kaluga', width=512, height=512, i_from=0, i_to=512, j_from=0, j_to=512, pixel_step=3):    
     current_dir = os.getcwd()
     tiles_gpkg_fullpath = os.path.join(current_dir, tiles_gpkg)
     if os.path.exists(tiles_gpkg_fullpath):
@@ -30,8 +30,8 @@ def download_nspd_settlements(s: requests.Session, tiles_gpkg='tiles.gpkg', tile
                 "FEATURE_COUNT": "10",
                 "I": "0",
                 "J": "0",
-                "WIDTH": "512",
-                "HEIGHT": "512",
+                "WIDTH": str(width),
+                "HEIGHT": str(height),
                 "CRS": "EPSG:3857",
                 "BBOX": "7592337.145509988,8000941.147561606,7670608.662474008,8079212.664525626",
                 "QUERY_LAYERS": "36281"
@@ -44,23 +44,27 @@ def download_nspd_settlements(s: requests.Session, tiles_gpkg='tiles.gpkg', tile
                     "Referer": f"https://nspd.gov.ru/map?thematic=Default&zoom=14.087600258143208&coordinate_x={str((xmin + xmax) / 2)}&coordinate_y={str((ymin + ymax) / 2)}&theme_id=1&is_copy_url=true&active_layers=36281"
                     }
                 params["BBOX"] = f"{xmin},{ymin},{xmax},{ymax}"
-                for i in range(513):
+                for i in range(i_from, i_to + 1, pixel_step):
                     params["I"] = str(i)
-                    for j in range(513):
+                    for j in range(j_from, j_to + 1, pixel_step):
                         params["J"] = str(j)                        
                         status, result = smart_http_request(s, url=url, params=params, headers=headers)
                         if status == 200:
                             jdata = result.json()
                             # geojson_result["features"].extend(jdata["features"])
                             for feature in jdata["features"]:
-                                if feature["properties"]["options"]["guid"] not in [x["properties"]["options"]["guid"] for x in geojson_result.get("features")]:
+                                # if feature["properties"]["options"]["guid"] not in [x["properties"]["options"]["guid"] for x in geojson_result.get("features")]:
+                                #     geojson_result["features"].append(feature)
+                                if feature["properties"]["options"]["guid"] not in [x["properties"]["guid"] for x in geojson_result.get("features")]:
+                                    for k, v in feature["properties"]["options"].items():
+                                        feature["properties"][k] = v
+                                    feature["properties"].pop('options', None)
                                     geojson_result["features"].append(feature)
-                                    pass
-                                pass
                 pass
-            geojson_result_path = os.path.join(current_dir, tiles_layer)
+            geojson_result_path = os.path.join(current_dir, 'results', f"{tiles_layer}.json")
             with open(geojson_result_path, 'w', encoding='utf-8') as of:
                 json.dump(geojson_result, of, ensure_ascii=False)
+                return True
         pass
     
     return False
@@ -69,5 +73,5 @@ def download_nspd_settlements(s: requests.Session, tiles_gpkg='tiles.gpkg', tile
 if __name__ == '__main__':
     with requests.Session() as s:
         s.verify = False
-        download_nspd_settlements(s, tiles_gpkg='tiles.gpkg', tiles_layer='kaluga_test')
+        download_nspd_settlements(s, tiles_gpkg='tiles.gpkg', tiles_layer='kaluga_test', i_from=200, i_to=230, j_from=300, j_to=330, pixel_step=3)
         
