@@ -73,5 +73,5 @@ def download_nspd_settlements(s: requests.Session, tiles_gpkg='tiles.gpkg', tile
 if __name__ == '__main__':
     with requests.Session() as s:
         s.verify = False
-        download_nspd_settlements(s, tiles_gpkg='tiles.gpkg', tiles_layer='kaluga_test', i_from=200, i_to=230, j_from=300, j_to=330, pixel_step=3)
+        download_nspd_settlements(s, tiles_gpkg='tiles.gpkg', tiles_layer='kaluga', pixel_step=3)
         
