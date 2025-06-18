@@ -71,9 +71,19 @@ def download_nspd_settlements(s: requests.Session, tiles_gpkg='tiles.gpkg', tile
 
 
 if __name__ == '__main__':
-    with requests.Session() as s:
-        s.verify = False
-        download_nspd_settlements(s, tiles_gpkg='tiles.gpkg', tiles_layer='kaluga', width=128, height=128, i_from=0, i_to=128, j_from=0, j_to=128, pixel_step=3)
+    # with requests.Session() as s:
+    #     s.verify = False
+    #     download_nspd_settlements(s, tiles_gpkg='tiles.gpkg', tiles_layer='kaluga', width=128, height=128, i_from=0, i_to=128, j_from=0, j_to=128, pixel_step=3)
     with requests.Session() as ss:
-        download_nspd_settlements(ss, tiles_gpkg='tiles.gpkg', tiles_layer='selected_regions_20250616', width=128, height=128, i_from=0, i_to=128, j_from=0, j_to=128, pixel_step=3)
+        download_nspd_settlements(ss, tiles_gpkg='tiles.gpkg', tiles_layer='lipetskaya', width=128, height=128, i_from=0, i_to=128, j_from=0, j_to=128, pixel_step=3)
+    with requests.Session() as ss:
+        download_nspd_settlements(ss, tiles_gpkg='tiles.gpkg', tiles_layer='volgogradskaya', width=128, height=128, i_from=0, i_to=128, j_from=0, j_to=128, pixel_step=3)
+    with requests.Session() as ss:
+        download_nspd_settlements(ss, tiles_gpkg='tiles.gpkg', tiles_layer='rostovskaya', width=128, height=128, i_from=0, i_to=128, j_from=0, j_to=128, pixel_step=3)
+    with requests.Session() as ss:
+        download_nspd_settlements(ss, tiles_gpkg='tiles.gpkg', tiles_layer='stavropolskiy', width=128, height=128, i_from=0, i_to=128, j_from=0, j_to=128, pixel_step=3)
+    with requests.Session() as ss:
+        download_nspd_settlements(ss, tiles_gpkg='tiles.gpkg', tiles_layer='krasnodarskiy', width=128, height=128, i_from=0, i_to=128, j_from=0, j_to=128, pixel_step=3)
+    with requests.Session() as ss:
+        download_nspd_settlements(ss, tiles_gpkg='tiles.gpkg', tiles_layer='tatarstan', width=128, height=128, i_from=0, i_to=128, j_from=0, j_to=128, pixel_step=3)
         
